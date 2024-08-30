@@ -34,10 +34,10 @@ year_list = [i for i in range(1980, 2024, 1)]
 # Create the layout of the app
 app.layout = html.Div([
     #TASK 2.1 Add title to the dashboard
-    html.H1("Automobile Sales Statistics Dashboard",style={'textAlign':'center', 'color':'#503D36', 'font-size':'24'})
+             html.H1("Automobile Sales Statistics Dashboard",style={'textAlign':'center', 'color':'#503D36', 'font-size':'24'})])
     #TASK 2.2: Add two dropdown menus
-    html.Div([
-        html.Label("Select Statistics:"),
+             html.Div([
+             html.label("Select Statistics:"),
         dcc.Dropdown(
             id='dropdown-statistics',
             options=[
@@ -45,18 +45,17 @@ app.layout = html.Div([
                            {'label': 'Recession Period Statistics', 'value': 'Recession Period Statistics'}
                            ],
             value='Select Statistics',
-            placeholder='Select a report type'
-        )
-    ]),
+            placeholder='Select a report type')
+])
     html.Div(dcc.Dropdown(
             id='select-year',
             options=[{'label': i, 'value': i} for i in year_list],
             placeholder='Select-year'
-            value='Select-year'
-        )),Div([#TA
+            value='Select-year'))
+            
     html.Div([#TASK 2.3: Add a division for output display
-    html.Div(id='output-container', className='chart-grid, style={'display': 'flex'}),
-])
+    html.Div(id='output-container', className='chart-grid', style={'display': 'flex'}),
+    ])
 #TASK 2.4: Creating Callbacks
 # Define the callback function to update the input container based on the selected statistics
 @app.callback(
@@ -171,7 +170,8 @@ def update_output_container(input_year, selected_statistics):
 #TASK 2.6: Returning the graphs for displaying Yearly data
         return [
                 html.Div(className='chart-item', children=[html.Div(children=Y_chart1),html.Div(children=Y_chart2)],style={'display':'flex'}),
-                html.Div(className='chart-item', children=[html.Div(children=Y_chart3],style={'display': 'flex'})
+                html.Div(className='chart-item', children=[html.Div(children=Y_chart3)],style={'display': 'flex'})
+                ]
         
     else:
         return None
