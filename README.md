@@ -25,8 +25,8 @@ app = dash.Dash(_name_)
 #---------------------------------------------------------------------------------
 # Create the dropdown menu options
 dropdown_options = [
-    {'label': '...........', 'value': 'Yearly Statistics'},
-    {'label': 'Recession Period Statistics', 'value': '.........'}
+    {'label': 'Yearly Statistics', 'value': 'Yearly Statistics'},
+    {'label': 'Recession Period Statistics', 'value': 'Recession Period Statistics'}
 ]
 # List of years 
 year_list = [i for i in range(1980, 2024, 1)]
@@ -40,7 +40,10 @@ app.layout = html.Div([
         html.Label("Select Statistics:"),
         dcc.Dropdown(
             id='dropdown-statistics',
-            options=dropdown_options,
+            options=[
+                {'label': 'Yearly Statistics', 'value': 'Yearly Statistics'},
+                {'label': 'Recession Period Statistics', 'value' : 'Recession Period Statistics'} 
+        ],
             value='Select Statistic',
             placeholder='Select a report type'
         )
@@ -48,11 +51,11 @@ app.layout = html.Div([
     html.Div(dcc.Dropdown(
         id='select-year',
         options=[{'label': i, 'value': i} for i in year_list],
-        value='Select the year',
-        placeholder='Select the year'
+        value='Select-year',
+        placeholder='Select-year'
     )),
     html.Div([  # TASK 2.3: Add a division for output display
-        html.Div(id='output-container', className='chart-grid', style={'display': 'flex'}) ])
+        html.Div(id='output-container', className='chart-grid', style={'display': 'flex'}),])
 ])
 
 
@@ -61,6 +64,7 @@ app.layout = html.Div([
 @app.callback(
     Output(component_id='select-year', component_property='disabled'),
     Input(component_id='dropdown-statistics', component_property='value'))
+
 def update_input_container(selected_statistic):
     if selected_statistic == 'Yearly Statistics':
         return False
@@ -85,7 +89,7 @@ def update_output_container(input_year, selected_statistics):
         # use groupby to create relevant data for plotting
         yearly_rec=recession_data.groupby('Year')['Automobile_Sales'].mean().reset_index()
         R_chart1 = dcc.Graph(
-            figure=px.line(yearly_rec, 
+                figure=px.line(yearly_rec, 
                 x='Year',
                 y='Automobile_Sales',
                 title="Average Automobile Sales fluctuation over Recession Period"))
@@ -109,7 +113,7 @@ def update_output_container(input_year, selected_statistics):
                     figure=px.pie(exp_rec, 
                     values='Advertising_Expenditure',
                     names='Vehicle_Type',
-                 title='Total expenditure share by vehicle type during recessions'))
+                    title='Total expenditure share by vehicle type during recessions'))
 
     
 
@@ -117,7 +121,7 @@ def update_output_container(input_year, selected_statistics):
         #grouping data for plotting
 	# Hint:Use unemployment_rate,Vehicle_Type and Automobile_Sales columns
         unemp_data= recession_data.groupby(['Vehicle_Type', 'unemployment_rate'])['Automobile_Sales'].mean().reset_index()
-R_chart4 = dcc.Graph(
+        R_chart4 = dcc.Graph(
               figure=px.bar(
                   unemp_data,
                   x='unemployment_rate',
@@ -138,10 +142,9 @@ return [
 # Check for Yearly Statistics. 
 
 elif (input_year and selected_statistic=='Yearly Statistic'):
-      yearly_data= data[data['Year'] == input_year]
+          yearly_data= data[data['Year'] == input_year]
 
                               
-
                               
 #plot 1 Yearly Automobile sales using line chart for the whole period.
         # grouping data for plotting.
@@ -179,13 +182,14 @@ elif (input_year and selected_statistic=='Yearly Statistic'):
 #TASK 2.6: Returning the graphs for displaying Yearly data
             return [
                 html.Div(className='chart-item', children=[html.Div(children=Y_chart1),html.Div(children=Y_chart2)],style={'display':'flex'}),
-                html.Div(className='chart-item', children=[html.Div(children=Y_chart3)],style={'display': 'flex'})
+                html.Div(className='chart-item', children=[html.Div(children=Y_chart3),html.Div(children=Y_chart4)],style={'display': 'flex'})
                 ]
         
     else:
         return None
 
 # Run the Dash app
-if name == 'main':
+    if __name__ == '__main__':
     app.run_server(debug=True)
+    
     
